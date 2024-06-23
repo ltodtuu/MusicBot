@@ -39,6 +39,20 @@ func (q *SongQueue) AddSong(song Song) {
 	q.songs = append(q.songs, song)
 }
 
+func (q *SongQueue) ReadSongQueue() []Song {
+	q.mutex.Lock()
+	defer q.mutex.Unlock()
+	return q.songs
+}
+
+func ReadQueueHandler(w http.ResponseWriter, r *http.Request) {
+	songs := queue.ReadSongQueue()
+	if err := json.NewEncoder(w).Encode(songs); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
 func AddSongHandler(w http.ResponseWriter, r *http.Request) {
 	var song Song
 	if err := json.NewDecoder(r.Body).Decode(&song); err != nil {

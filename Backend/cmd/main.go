@@ -9,6 +9,7 @@ import (
 func main() {
 	router := http.NewServeMux()
 	router.HandleFunc("GET /songs/next", songs.NextSongHandler)
+	router.HandleFunc("GET /songs/queue", songs.ReadQueueHandler)
 	router.HandleFunc("POST /songs/add", songs.AddSongHandler)
 
 	server := http.Server{
